@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,15 @@ public class TrackServiceImplTest {
     }
 
     @Test
+    @DisplayName("Test case for retrieving all the tracks greater than specified rating")
+    public void givenTrackRatingReturnAllTracksGreaterThan4() throws TrackRatingNotFoundException {
+        List<Track> list = new ArrayList<>();
+        list.add(track1);
+        when(trackRepository.findByTrackRating(track.getTrackRating())).thenReturn(list);
+        assertEquals(1,trackService.getTrackByRating(4).size());
+    }
+
+    @Test
     @DisplayName("Test case for retrieving all the tracks by Artist")
     public void givenTrackArtistReturnAllTrackDetailsSuccess() throws TrackArtistNotFoundException {
         when(trackRepository.findByTrackArtist(track.getTrackArtist())).thenReturn(trackList);
@@ -106,7 +116,6 @@ public class TrackServiceImplTest {
         boolean flag = trackService.deleteTrack(track.getTrackId());
         assertEquals(true,flag);
 
-        verify(trackRepository,times(1)).deleteById(any());
-        verify(trackRepository,times(1)).findById(any());
+        verify(trackRepository,times(1)).delete(any());
     }
 }
